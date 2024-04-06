@@ -17,18 +17,14 @@ POPULAR = {
 
 
 def index(request):
-    page_num = request.GET.get('page', 1)
-    paginator = Paginator(QUESTIONS, 5)
-    page_obj = paginator.page(page_num)
+    page_obj = paginator(QUESTIONS, request)
     return render(request, "index.html", {"current": "New Questions",
                                           "other": "Hot Questions",
                                           "questions": page_obj,
                                           "popular": POPULAR})
 
 def hot(request):
-    page_num = request.GET.get('page', 1)
-    paginator = Paginator(QUESTIONS, 5)
-    page_obj = paginator.page(page_num)
+    page_obj = paginator(QUESTIONS, request)
     return render(request,"hot.html", {"current": "Hot Questions",
                                             "other": "New Questions",
                                             "questions": page_obj,
@@ -64,10 +60,15 @@ def login(request):
     return render(request, 'login.html', {"page_title": "Login", "popular": POPULAR})
 
 def tag(request, tag_name):
-    page_num = request.GET.get('page', 1)
-    paginator = Paginator(QUESTIONS, 5)
-    page_obj = paginator.page(page_num)
+    page_obj = paginator(QUESTIONS, request)
 
     return render(request, "tag.html", {"page_title": f"Tag: {tag_name}",
                                         "questions": page_obj,
-                                        "popular": POPULAR})
+                                       "popular": POPULAR})
+
+
+
+def paginator(objects_list, request, per_page=5):
+    page_num = request.GET.get('page', 1)
+    paginator = Paginator(objects_list, per_page)
+    return paginator.page(page_num)
