@@ -23,15 +23,12 @@
                             {{ item.text }}
                           </p>
                           <div class="row">
-                            <a class="col-4" href="/question.html">answers (3)</a>
+
+                            <a class="col-4" href="{% url 'question' question.id %}">Answers(4)</a>
                             <div class="col-8">
                               <span>Tags</span>
-                              <a href="/tag.html">tag</a>
-                              <a href="/tag.html">tag</a>
-                              <a href="/tag.html">tag</a>
-                              <a href="/tag.html">tag</a>
-                              <a href="/tag.html">tag</a>
-                              <a href="/tag.html">tag</a>
+
+                               {% include 'layouts/listtag.html' with tags=question.tags %}
                             </div>
                           </div>
                         </div>

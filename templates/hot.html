@@ -1,49 +1,40 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
+    {% block user %}
+        {% include 'layouts/authorized.html' %}
+    {% endblock %}
 
 
 
-       {% block content %}
-
-          <div class="div">
-            <hr class="hr hr-blurry" />
-          </div>
-
-        <div class="d-flex gap-3 align-items-center">
-            <h1>Hot Questions</h1>
-            <a href="/">NEW Questions</a>
-        </div>
 
 
-        <div class="row">
-            <div class="col-8">
+
+    {% block page_title %}
+
+    <div class="d-flex gap-3 align-items-center">
+        <h1 class="d-inline-block">{{ current }}</h1>
+        {% if other == 'Hot Questions' %}
+            <a href="{% url 'index' %}">{{ other }}</a>
+        {% endif %}
+
+    </div>
+
+    {% endblock %}
+
+
+
+{% block content %}
 
               {% for question in questions%}
-                {% include "layouts/question.html" with item=question %}
+                {% include "layouts/question.html" with item=question  %}
               {% endfor %}
 
-
-                  <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                  </nav>
-
-            </div>
 {% endblock %}
 
 
 
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% block pagination %}
+    {% include 'layout/pagination.html' %}
+  <!--{% include "layouts/pagination.html" with page_obj=questions %}-->
+{% endblock %}
