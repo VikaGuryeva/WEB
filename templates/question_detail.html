@@ -11,11 +11,11 @@
 
 
 
-                {% include "layouts/question.html"  %}
+                {% include "layouts/onequestion.html"  %}
               <hr>
-
+                {% for answer in answers %}
                   {% include "layouts/answer.html" %}
-
+                {% endfor %}
                 <form>
                                 <div class="form-floating border w-100 mb-3">
                                   <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
