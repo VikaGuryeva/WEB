@@ -1,8 +1,11 @@
+
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
-from django.core.paginator import Paginator
-from app.models import Question, Answer, Tag, QuestionLike, AnswerLike, Profile
+from app.models import Question
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+
 # Create your views here.
 
 from django.http import HttpResponse
@@ -24,8 +27,7 @@ def index(request):
     page_obj = paginator(questions, request)
     return render(request, "index.html", {"current": "New Questions",
                                           "other": "Hot Questions",
-                                          "questions": page_obj,
-                                          "popular": POPULAR})
+                                          "questions": page_obj})
 
 
 def hot(request):
@@ -45,7 +47,7 @@ def question(request, question_id):
 
 def question_detail(request, question_id):
 
-    return render(request, "question_detail.html", {"question": question, 'answers': answers})
+    return render(request, "question_detail.html", {"question": question})
 
 def ask(request):
 
