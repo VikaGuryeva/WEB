@@ -26,8 +26,8 @@
 
 {% block content %}
 
-              {% for question in questions%}
-                {% include "layouts/question.html" with item=question  %}
+              {% for question in questions %}
+                {% include "layouts/question.html"  %}
               {% endfor %}
 {% include "layouts/pagination.html" with page_obj=questions %}
 {% endblock %}

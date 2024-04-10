@@ -1,5 +1,5 @@
 {% load static %}
-
+{% for question in questions %}
 <article class="card mb-3 mt-4 w-100">
                     <div class="row g-0">
                       <div class="col-3 p-2">
@@ -18,7 +18,7 @@
                         <div class="card-body">
 
                           <p class="card-text">
-                            {{ item.text }}
+                            {{ question.text }}
                           </p>
 
                           <div class="form-check mt-2">
@@ -29,3 +29,4 @@
                       </div>
                     </div>
                   </article>
+{% endfor %}

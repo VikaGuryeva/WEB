@@ -1,5 +1,8 @@
 {% load static %}
 
+
+{% for question in questions %}
+
 <article class="card mb-3 mt-4 w-100">
                     <div class="row g-0">
                       <div class="col-3 p-2">
@@ -17,14 +20,16 @@
                       <div class="col">
                         <div class="card-body">
                           <h5 class="card-title">
-                            <a href="{% url "question" item.id %}">{{ item.title }}</a>
+                            <a href="{% url "question" question.id %}">{{ question.title }}</a>
                           </h5>
                           <p class="card-text">
-                            {{ item.text }}
+
+                            {{ question.question_text }}
+
                           </p>
                           <div class="row">
 
-                            <a class="col-4" href="{% url 'question' question.id %}">Answers(4)</a>
+                            <a class="col-4" href="{% url 'question' question.id %}">Answers({{question.answer_count}})</a>
                             <div class="col-8">
                               <span>Tags</span>
 
@@ -35,3 +40,4 @@
                       </div>
                     </div>
                   </article>
+{% endfor %}
