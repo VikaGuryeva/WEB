@@ -30,6 +30,9 @@ class QuestionManager(models.Manager):
     def get_new_questions(self):
         return self.order_by('-date_asked')[:5]
 
+    def get_question(self, question_id):
+        return self.filter(id=question_id)
+
     def get_by_tag(self, tag_name):
         tag = get_object_or_404(Tag, tag_name=tag_name)
         return self.filter(tags=tag)
@@ -108,3 +111,9 @@ class AnswerLike(models.Model):
 
     class Meta:
         unique_together = (('answer', 'user'),)
+
+def get_base_layout_context():
+    return {"popular_tags": Tag.objects.get_popular(),
+            "best_members": Profile.objects.get_best_members(),
+            "is_authorized": True,
+            "user": Profile.objects.first()}

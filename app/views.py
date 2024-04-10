@@ -2,7 +2,7 @@
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
-from app.models import Question
+from app.models import Question, Answer, Profile, Tag
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
@@ -24,7 +24,7 @@ POPULAR = {
 
 def index(request):
     questions = Question.objects.order_by('-date_asked')
-    page_obj = paginator(questions, request)
+    page_obj = paginate(request, questions)
     return render(request, "index.html", {"current": "New Questions",
                                           "other": "Hot Questions",
                                           "questions": page_obj})
@@ -32,18 +32,18 @@ def index(request):
 
 def hot(request):
     questions = Question.objects.order_by('-questionlike')[:10]
-    page_obj = paginator(questions, request)
+    page_obj = paginate(request, questions)
     return render(request,"hot.html", {"current": "Hot Questions",
                                             "other": "New Questions",
-                                            "questions": page_obj,
-                                            "popular": POPULAR})
+                                            "questions": page_obj})
 
 
 def question(request, question_id):
-    questions = get_object_or_404(Question, pk=question_id)
-    answers = questions.answer_set.all()
+    questions = Question.objects.get_question(question_id)
+    answer = Answer.objects.get_by_question_id(question_id)
+    page_obj = paginate(request, answer, 10)
+    return render(request, "question_detail.html", {"question": questions[0], "answers": page_obj})
 
-    return render(request,"question_detail.html", {"question": questions, 'answers': answers})
 
 def question_detail(request, question_id):
 
@@ -79,13 +79,23 @@ def login(request):
 
 def tag(request, tag_name):
     tags = get_object_or_404(Tag, tag_name=tag_name)
-    page_obj = paginator(tags, request)
+    page_obj = paginate(request, tags)
 
     return render(request, "tag.html", {"page_title": tags,
                                         "questions": page_obj})
 
 
-def paginator(objects_list, request, per_page=5):
+def paginate(request, objects_list, per_page=5):
     page_num = request.GET.get('page', 1)
     paginator = Paginator(objects_list, per_page)
-    return paginator.page(page_num)
+
+    try:
+        obj = paginator.page(page_num)
+
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
+
+    return obj
