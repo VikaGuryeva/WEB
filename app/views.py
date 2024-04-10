@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from app.models import Question, Answer, Tag, QuestionLike, AnswerLike
+from app.models import Question, Answer, Tag, QuestionLike, AnswerLike, Profile
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 # Create your views here.
@@ -65,8 +65,10 @@ def settings(request):
     return render(request, 'settings.html', context)
 
 
-def register(request):
-    return render(request, "register.html", {"page_title": "Registration", "popular": POPULAR})
+def register(request, profile_id, tag_name):
+    profile = get_object_or_404(Profile, pk=profile_id)
+    tag = Tag.objects.get(name=tag_name)
+    return render(request, "register.html", {"page_title": profile, "popular": POPULAR})
 
 
 def login(request):
@@ -74,12 +76,11 @@ def login(request):
 
 
 def tag(request, tag_name):
-    tag = Tag.objects.get(id=tag_name)
-    page_obj = paginator(QUESTIONS, request)
+    tags = get_object_or_404(Tag, tag_name=tag_name)
+    page_obj = paginator(tags, request)
 
-    return render(request, "tag.html", {"page_title": f"Tag: {tag_name}",
-                                        "questions": page_obj,
-                                       "popular": POPULAR})
+    return render(request, "tag.html", {"page_title": tags,
+                                        "questions": page_obj})
 
 
 def paginator(objects_list, request, per_page=5):
