@@ -1,72 +1,86 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from app.models import Profile, Tag, Question, Answer, QuestionLike, AnswerLike
-import uuid
+from app.models import Profile, Question, Answer, Tag, QuestionLike, AnswerLike
+from faker import Faker
+from django.db import transaction
+from django.utils import timezone
+import random
 
 class Command(BaseCommand):
-    help = "Generates dummy data for db"
+    help = 'Fill the database with test data'
 
     def add_arguments(self, parser):
-        parser.add_argument("ratio", type=int)
+        parser.add_argument('ratio', type=int, help='Coefficient for data population')
 
-    def handle(self, *args, **options):
-        ratio = options['ratio']
+    def handle(self, *args, **kwargs):
+        ratio = kwargs['ratio']
+        fake = Faker()
 
-        # Adding Users
+        # Create Users and Profiles
+        print("Creating users and profiles...")
         users = []
-        for i in range(ratio):
-            user = User.objects.create_user(
-                username=f'username_{uuid.uuid4().hex[:10]}',
-                email=f"user{i}@example.com",
-                password="superpass"
-            )
-            users.append(user)
-
-        # Adding Profiles
         profiles = []
-        for user in users:
-            profile = Profile.objects.create(user=user)
+        for _ in range(max(100, ratio)):
+            username = self.generate_unique_username()
+            email = fake.email()
+            password = fake.password()
+            user = User(username=username, email=email)
+            users.append(user)
+            profile = Profile(user=user, avatar=None)
             profiles.append(profile)
 
-        # Adding tags
-        tags = []
-        for i in range(ratio):
-            tag = Tag.objects.create(name=f"tag{i}")
-            tags.append(tag)
+        User.objects.bulk_create(users)
+        Profile.objects.bulk_create(profiles)
 
-        # Adding Questions
+        # Create Questions, Answers, Tags, and User Likes
+        print("Creating questions, answers, tags, and user likes...")
         questions = []
-        for i in range(ratio):
-            for j in range(10):
-                question = Question.objects.create(
-                    title=f'This is a question #{i * 10 + j}',
-                    question_text='This is a content for a question',
-                    user=profiles[i]
-                )
-                questions.append(question)
-
-        # Adding answers
         answers = []
-        for i in range(ratio):
-            for j in range(100):
-                answer = Answer.objects.create(
-                    answer_text=f"Answer {i * ratio + j}",
-                    user=profiles[i],
-                    question=questions[(i * 100 + j) % len(questions)]
-                )
+        question_likes = []
+        answer_likes = []
+        for _ in range(max(100, ratio * 10)):
+            user = random.choice(profiles)
+
+            title = fake.sentence()
+            question_text = fake.text()
+            question = Question(user=user, title=title, question_text=question_text, date_asked=timezone.now())
+            questions.append(question)
+
+            # Create Answers
+            for _ in range(max(100, ratio * 10)):
+                answer_user = random.choice(profiles)
+                text = fake.text()
+                answer = Answer(user=answer_user, question=question, text=text, date_answered=timezone.now())
                 answers.append(answer)
 
-        # Adding tags to questions
-        for i, question in enumerate(questions):
-            question.tags.add(tags[i % len(tags)], tags[(i + 1) % len(tags)], tags[(i + 2) % len(tags)])
+            # Create user likes for questions
+            for _ in range(max(200, ratio * 20)):
+                like_user = random.choice(profiles)
+                question_like = QuestionLike(user=like_user, question=question)
+                question_likes.append(question_like)
 
-        # Adding likes to questions
-        for i in range(ratio):
-            for question in questions:
-                QuestionLike.objects.create(question=question, user=profiles[i])
+        Question.objects.bulk_create(questions)
+        Answer.objects.bulk_create(answers)
+        QuestionLike.objects.bulk_create(question_likes)
 
-        # Adding likes to answers
-        for i in range(ratio):
-            for answer in answers:
-                AnswerLike.objects.create(answer=answer, user=profiles[i])
+        with transaction.atomic():
+            for _ in range(max(100, ratio)):
+                tag_name = fake.word()
+                tag = Tag(name=tag_name)
+                tag.save()
 
+            for _ in range(max(20, ratio * 20)):
+                answer_like_user = random.choice(profiles)
+                answer_like = AnswerLike(user=answer_like_user, answer=random.choice(answers))
+                answer_likes.append(answer_like)
+
+            AnswerLike.objects.bulk_create(answer_likes)
+
+        print("Database successfully filled with test data")
+
+    def generate_unique_username(self):
+        fake = Faker()
+        username = fake.user_name()
+        while User.objects.filter(username=username).exists():
+            username = fake.user_name()
+        return username

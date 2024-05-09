@@ -57,10 +57,9 @@
                 <div>
 
 
-                 {% for user in popular_users %}
-                      <div class="row">{{ user }}</div>
-                  {% endfor %}
-
+                    {% for best_member in best_members %}
+                        <a href="" class="d-block">{{best_member.user.username}}</a>
+                    {% endfor %}
                 </div>
 
             </div>
