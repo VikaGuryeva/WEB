@@ -14,7 +14,7 @@ from django.http import HttpResponse
 
 def index(request):
     questions = Question.objects.get_new_questions()
-    page_obj = paginate(request, questions, 20)
+    page_obj = paginate(request, questions, 5)
     return render(request, "index.html", {"current": "New Questions",
                                           "other": "Hot Questions",
                                           "questions": page_obj})
@@ -22,7 +22,7 @@ def index(request):
 
 def hot(request):
     questions = Question.objects.get_best_questions()
-    page_obj = paginate(request, questions, 20)
+    page_obj = paginate(request, questions, 5)
     return render(request,"hot.html", {"current": "Hot Questions",
                                             "other": "New Questions",
                                             "questions": page_obj})
@@ -31,14 +31,14 @@ def hot(request):
 def question(request, question_id):
     questions = Question.objects.get_question(question_id)
     answer = Answer.objects.get_by_question_id(question_id)
-    page_obj = paginate(request, answer, 10)
+    page_obj = paginate(request, answer, 5)
     return render(request, "question_detail.html", {"question": questions[0], "answers": page_obj})
 
 
 def tag(request, tag_name):
     que = Question.objects.get_by_tag(tag_name)
 
-    page_obj = paginate(request, que, 10)
+    page_obj = paginate(request, que, 5)
     return render(request, "tag.html", {"questions": page_obj, "tag": tag_name})
 
 

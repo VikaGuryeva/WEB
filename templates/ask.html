@@ -5,45 +5,38 @@
 
 
 {% block user %}
-    {% include 'layouts/authorized.html' %}
+{% include 'components/authorized.html' %}
 {% endblock %}
 
 {% block page_title %}
-    {% include 'layouts/page_title.html' %}
+{% include 'components/page_title.html' %}
 {% endblock %}
 
-     {% block content %}
+{% block content %}
 
 
-           <form class="question__form container-fluid ps-5">
+<form class="question__form container-fluid ps-5">
         <div class="mb-3 row">
-            <label for="inputTitle" class="col-sm-1 p-2 form-label">Title</label>
-            <input type="text" class="form-control col" id="inputTitle">
+                <label for="inputTitle" class="col-sm-1 p-2 form-label">Title</label>
+                <input type="text" class="form-control col" id="inputTitle">
         </div>
         <div class="mb-3 row">
-            <label for="inputText" class="col-sm-1 p-2 form-label">Text</label>
-            <textarea class="form-control col" id="inputText" rows="5"></textarea>
+                <label for="inputText" class="col-sm-1 p-2 form-label">Text</label>
+                <textarea class="form-control col" id="inputText" rows="5"></textarea>
         </div>
         <div class="mb-3 row">
-            <label for="inputTitle" class="col-sm-1  p-2 form-label">Tags</label>
-            <input type="text" class="form-control col" id="inputTitle">
+                <label for="inputTitle" class="col-sm-1  p-2 form-label">Tags</label>
+                <input type="text" class="form-control col" id="inputTitle">
         </div>
         <div class="row">
-                      <div class="col-md-1">
+                <div class="col-md-1">
 
-                      </div>
-                      <div class="col-md-10 ml-auto d-flex align-self-start">
-                          <button type="button" class="btn btn-outline-dark ">ASK!</button>
+                </div>
+                <div class="col-md-10 ml-auto d-flex align-self-start">
+                        <button type="button" class="btn btn-outline-dark ">ASK!</button>
 
-                      </div>
-                  </div>
-    </form>
+                </div>
+        </div>
+</form>
 
 {% endblock %}
-
-
-
-
-
-
-

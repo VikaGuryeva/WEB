@@ -1,41 +1,34 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-    {% block user %}
-        {% include 'layouts/authorized.html' %}
-    {% endblock %}
-
-
-
-
-
-
-    {% block page_title %}
-
-    <div class="d-flex gap-3 align-items-center">
-        <h1 class="d-inline-block">{{ current }}</h1>
-        {% if other == 'Hot Questions' %}
-            <a href="{% url 'hot' %}">{{ other }}</a>
-        {% endif %}
-
-    </div>
-
-    {% endblock %}
-
-
-
-{% block content %}
-
-              {% for question in questions %}
-                {% include "layouts/question.html"  %}
-              {% endfor %}
-
-
-{% include "layouts/pagination.html" with page_obj=questions %}
+{% block user %}
+    {% include 'components/authorized.html' %}
 {% endblock %}
 
 
 
 
 
+{% block page_title %}
 
+    <div class="d-flex gap-3 align-items-center">
+            <h1 class="d-inline-block">{{ current }}</h1>
+            {% if other == 'Hot Questions' %}
+            <a href="{% url 'hot' %}">{{ other }}</a>
+            {% endif %}
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% for question in questions %}
+    {% include "components/question.html"  %}
+    {% endfor %}
+
+
+    {% include "components/pagination.html" with page_obj=questions %}
+{% endblock %}

@@ -1,40 +1,40 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-
-
-
-       {% block content %}
-
-
-
-
-
-
-                {% include "layouts/onequestion.html"  %}
-              <hr>
-                {% for answer in answers %}
-                  {% include "layouts/answer.html" %}
-                {% endfor %}
-                <form>
-                                <div class="form-floating border w-100 mb-3">
-                                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                                  <label for="floatingTextarea2">Enter your answer or comments here</label>
-                                </div>
-
-                </form>
-
-                                <div class="col ">
-                                  <button type="button" class="btn btn-outline-success">Answer</button>
-                                </div>
-
-
+{% block user %}
+{% include 'components/authorized.html' %}
 {% endblock %}
 
 
 
+{% block content %}
 
 
-      
-    
 
+
+
+{% include "components/onequestion.html"  %}
+<hr>
+{% for answer in answers %}
+{% include "components/answer.html" %}
+{% endfor %}
+
+{% include "components/pagination.html" with page_obj=answers %}
+
+<form>
+        <div class="form-floating border w-100 mb-3">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Enter your answer or comments here</label>
+        </div>
+
+</form>
+
+<div class="col ">
+        <button type="button" class="btn btn-outline-success">Answer</button>
+</div>
+
+
+
+
+
+{% endblock %}

@@ -1,118 +1,118 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-    {% block user %}
-        {% include 'layouts/authorized.html' %}
-    {% endblock %}
+{% block user %}
+{% include 'components/authorized.html' %}
+{% endblock %}
 
 
 
-    {% block page_title %}
+{% block page_title %}
 
-    <div class="d-flex gap-3 align-items-center">
+<div class="d-flex gap-3 align-items-center">
         <h1 class="d-inline-block">{{ current }}</h1>
         {% if other == 'Hot Questions' %}
-            <a href="{% url 'index' %}">{{ other }}</a>
+        <a href="{% url 'index' %}">{{ other }}</a>
         {% endif %}
 
-    </div>
+</div>
 
-    {% endblock %}
+{% endblock %}
 
 
-    {% block content %}
-              <form>
+{% block content %}
+<form>
 
-              <div class="form-group row g-3 mt-5">
+        <div class="form-group row g-3 mt-5">
 
                 <div class="col-3 mt-4">
-                  <label for="inputLogin" class="form-label">Login</label>
+                        <label for="inputLogin" class="form-label">Login</label>
                 </div>
 
                 <div class="col-auto mb-3 ">
-                  <input class="form-control form-control-lg" type="text"  id="inputLogin" value="{{ settings.current_login }}" placeholder="your_login" aria-label=".form-control-lg example">
+                        <input class="form-control form-control-lg" type="text" id="inputLogin" value="{{ settings.current_login }}" placeholder="your_login"
+                                aria-label=".form-control-lg example">
                 </div>
 
-              </div>
+        </div>
 
 
 
-              <div class="form-group row g-3 mt-2">
+        <div class="form-group row g-3 mt-2">
 
                 <div class="col-3 mt-3">
-                  <label for="inputEmail" class="form-label">Email</label>
+                        <label for="inputEmail" class="form-label">Email</label>
                 </div>
 
                 <div class="col-auto mb-4 ">
-                  <input class="form-control form-control-lg" type="text" id="inputEmail" value="{{ settings.current_email }}" placeholder="email@example.com" aria-label=".form-control-lg example">
+                        <input class="form-control form-control-lg" type="text" id="inputEmail" value="{{ settings.current_email }}"
+                                placeholder="email@example.com" aria-label=".form-control-lg example">
                 </div>
 
-              </div>
+        </div>
 
 
 
-              <div class="form-group row g-3 mt-2">
+        <div class="form-group row g-3 mt-2">
 
                 <div class="col-3 mt-3">
-                  <label for="inputNickName" class="form-label">NickName</label>
+                        <label for="inputNickName" class="form-label">NickName</label>
                 </div>
 
                 <div class="col-auto mb-4 ">
-                  <input class="form-control form-control-lg" type="text" id="inputNickName" value="{{ settings.current_NickName}}" placeholder="yourNickName" aria-label=".form-control-lg example">
+                        <input class="form-control form-control-lg" type="text" id="inputNickName" value="{{ settings.current_NickName}}"
+                                placeholder="yourNickName" aria-label=".form-control-lg example">
                 </div>
 
-              </div>
+        </div>
 
 
 
-              <div class="form-group row g-3 mt-2">
+        <div class="form-group row g-3 mt-2">
 
                 <div class="col-3 mt-3">
-                  <label for="UploadAvatar" class="form-label">Upload avatar</label>
+                        <label for="UploadAvatar" class="form-label">Upload avatar</label>
                 </div>
 
 
                 <div class="col">
 
-                      <div class="row">
+                        <div class="row">
 
 
-                          <div class="ml-2 col-sm-6">
-                            <img src="https://placehold.it/80x80" id="UploadAvatar" class="img-thumbnail">
-                          </div>
+                                <div class="ml-2 col-sm-6">
+                                        <img src="https://placehold.it/80x80" id="UploadAvatar" class="img-thumbnail">
+                                </div>
 
 
-                      </div>
+                        </div>
 
-                            <div class="col-5">
+                        <div class="col-5">
 
-                            <form method="post" id="image-form">
-                              <input type="file" name="img[]" class="file" accept="image/*">
+                                <form method="post" id="image-form">
+                                        <input type="file" name="img[]" class="file" accept="image/*">
 
-                            </form>
-
-
-
-                          </div>
+                                </form>
 
 
-                  </div>
 
-                  <div class="form-group row">
-                    <div class="col-sm-3"></div>
-                    <div class="col-2  mt-3" >
-                      <button type="button" class="btn btn-outline-success">Save</button>
-                  </div>
+                        </div>
+
+
+                </div>
+
+                <div class="form-group row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-2  mt-3">
+                                <button type="button" class="btn btn-outline-success">Save</button>
+                        </div>
                 </div>
 
 
-                  </div>
+        </div>
 
 
 
-                </form>
+</form>
 
-          {% endblock %}
-
-
-
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+
+<article class="card mb-3 mt-4 w-100">
+        <div class="row g-0">
+                <div class="col-3 p-2">
+                        <div class="border w-100 mb-3" style="height: 100px">
+                                <img src="{% static 'img/try1.jpeg' %}" class="img-fluid rounded-start" alt="..." />
+                        </div>
+                        <div class="input-group flex-nowrap">
+                                <input type="number" value="{{ answer.rating }}" class="form-control" />
+                        </div>
+                </div>
+                <div class="col">
+                        <div class="card-body">
+
+                                <p class="card-text">
+                                        {{ answer.text }}
+                                </p>
+
+                                <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">Correct</label>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</article>
