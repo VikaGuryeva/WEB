@@ -14,5 +14,6 @@ urlpatterns = [
     path('register', views.register, name='register'),
     path('login', views.login, name='login'),
     path('tag/<str:tag_name>', views.tag, name='tag'),
+    path('signup/', views.register, name='signup'),
 
 ]

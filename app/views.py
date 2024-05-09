@@ -1,38 +1,28 @@
 
-
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
-from app.models import Question, Answer, Profile, Tag
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from app.models import Question, Answer, Profile, Tag, get_basecontext
 
+from django.http import Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound
 # Create your views here.
 
 from django.http import HttpResponse
-QUESTIONS = [
-    {
-        "id": i,
-        "title": f"Question {i}",
-        "text": f"This is question number {i}"
-    } for i in range(200)
-]
-POPULAR = {
-    "tags": [f"tag{i+1}" for i in range(5)],
-    "users": [f"user{i+1}" for i in range(5)]
-}
+
 
 
 def index(request):
-    questions = Question.objects.order_by('-date_asked')
-    page_obj = paginate(request, questions)
+    questions = Question.objects.get_new_questions()
+    page_obj = paginate(request, questions, 20)
     return render(request, "index.html", {"current": "New Questions",
                                           "other": "Hot Questions",
                                           "questions": page_obj})
 
 
 def hot(request):
-    questions = Question.objects.order_by('-questionlike')[:10]
-    page_obj = paginate(request, questions)
+    questions = Question.objects.get_best_questions()
+    page_obj = paginate(request, questions, 20)
     return render(request,"hot.html", {"current": "Hot Questions",
                                             "other": "New Questions",
                                             "questions": page_obj})
@@ -45,9 +35,15 @@ def question(request, question_id):
     return render(request, "question_detail.html", {"question": questions[0], "answers": page_obj})
 
 
-def question_detail(request, question_id):
+def tag(request, tag_name):
+    que = Question.objects.get_by_tag(tag_name)
 
-    return render(request, "question_detail.html", {"question": question})
+    page_obj = paginate(request, que, 10)
+    return render(request, "tag.html", {"questions": page_obj, "tag": tag_name})
+
+
+
+
 
 def ask(request):
 
@@ -77,12 +73,6 @@ def login(request):
     return render(request, 'login.html', {"page_title": "Login", "popular": POPULAR})
 
 
-def tag(request, tag_name):
-    tags = get_object_or_404(Tag, tag_name=tag_name)
-    page_obj = paginate(request, tags)
-
-    return render(request, "tag.html", {"page_title": tags,
-                                        "questions": page_obj})
 
 
 def paginate(request, objects_list, per_page=5):

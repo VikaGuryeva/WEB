@@ -15,7 +15,7 @@ class Profile(models.Model):
     objects = ProfileManager()
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
 
 
 class TagManager(models.Manager):
@@ -25,18 +25,19 @@ class TagManager(models.Manager):
 
 class QuestionManager(models.Manager):
     def get_best_questions(self):
-        return self.order_by('-answer_count')[:5]
+        return self.order_by('-rating')[:100]
+
+
+
 
     def get_new_questions(self):
-        return self.order_by('-date_asked')[:5]
+        return self.order_by('-date_asked')[:100]
 
     def get_question(self, question_id):
         return self.filter(id=question_id)
 
-    def get_by_tag(self, tag_name):
-        tag = get_object_or_404(Tag, tag_name=tag_name)
-        return self.filter(tags=tag)
-
+    def get_by_tag(self, category):
+        return self.filter(tags__name=category)
 
 class AnswerManager(models.Manager):
     def get_by_question_id(self, question_id):
@@ -44,12 +45,39 @@ class AnswerManager(models.Manager):
         return self.filter(question=question)
 
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    COLORS = [
+        'text-bg-primary',
+        'text-bg-warning',
+        'text-bg-secondary',
+        'text-bg-success',
+        'text-bg-danger',
+        'text-bg-info',
+    ]
+
+    objects = TagManager()
+
+    def __str__(self):
+        return self.name
+
+    def random_color(self):
+        from random import randint
+        return self.COLORS[randint(0, len(self.COLORS) - 1)]
+
+
 class Question(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     question_text = models.TextField()
     date_asked = models.DateTimeField(auto_now_add=True)
-    answer_count = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+    tags = models.ManyToManyField(Tag)
+    rating = models.IntegerField(default=0)
 
     objects = QuestionManager()
 
@@ -66,54 +94,54 @@ class Question(models.Model):
     def get_answers(self):
         return Answer.objects.filter(question=self)
 
-    def str(self):
-        return self.title
+    def update_rating(self):
+        self.update(rating=QuestionLike.objects.filter(question=self).count())
+
+    class Meta:
+        ordering = ["-date_asked"]
 
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
-    answer_text = models.TextField()
+    text = models.TextField()
     date_answered = models.DateTimeField(auto_now_add=True)
     correct = models.BooleanField(default=False)
 
     objects = AnswerManager()
 
     def __str__(self):
-        return f'{self.user.username} to "{self.question.title}": "{self.answer_text}"'
+        return f'{self.user.name} to "{self.question.title}": "{self.text}"'
 
     def str(self):
-        return self.answer_text[:50]
-
-
-class Tag(models.Model):
-    tag_name = models.CharField(max_length=50)
-
-    objects = TagManager()
-
-    def __str__(self):
-        return self.tag_name
+        return self.text[:50]
 
 
 class QuestionLike(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
     class Meta:
-        unique_together = (('question', 'user'),)
+        unique_together = [["user", "question"]]
+
 
 class AnswerLike(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = (('answer', 'user'),)
+        unique_together = [["user", "answer"]]
 
-def get_base_layout_context():
+
+def get_basecontext():
     return {"popular_tags": Tag.objects.get_popular(),
             "best_members": Profile.objects.get_best_members(),
             "is_authorized": True,
-            "user": Profile.objects.first()}
+            "user": Profile.objects.first()
+            }
