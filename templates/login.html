@@ -11,7 +11,8 @@
 
 {% block content %}
 
-<form method="get" action="">
+<form method="post" action="">
+        {% csrf_token %}
         <div class="form-group row mt-2 mb-2 ">
 
                 <div class="col-md-3 mt-4">
@@ -19,7 +20,7 @@
                 </div>
 
                 <div class="col-auto mb-3 ">
-                        <input class="form-control form-control-lg" type="email" id="Inputusername" placeholder="Enter your login here"
+                        <input class="form-control form-control-lg" type="text" name="username" id="Inputusername" placeholder="Enter your login here"
                                 aria-label=".form-control-lg example">
                 </div>
 
@@ -37,7 +38,7 @@
                 </div>
 
                 <div class="col-auto mb-4 ">
-                        <input class="form-control form-control-lg is-valid" type="password" placeholder="********" id="inputPassword" value="Password"
+                        <input class="form-control form-control-lg" name="password" type="text" placeholder="********" id="inputPassword"
                                 required>
                         <div class="valid-feedback">
                                 Все хорошо!или неверный пароль!
@@ -46,26 +47,31 @@
                 </div>
 
         </div>
-</form>
 
-
-<div class="row mt-2 mb-2">
+        <div class="row mt-2 mb-2">
         <div class="col-md-3">
 
         </div>
         <div class="col-md-8 d-flex align-self-start">
-                <button type="button" class="btn btn-outline-dark ">Log in!</button>
-
+                <button type="submit" class="btn btn-primary">Log in!</button>
         </div>
 </div>
 
 
+
+
+</form>
+
+
+
+
+
 <div class="row mt-2 mb-2">
         <div class="col-md-3">
 
         </div>
         <div class="col-md-8 d-flex align-self-start">
-                <p><a class="link-opacity-75-hover" href="#">Create new account</a></p>
+                <p><a class="link-opacity-75-hover" href="{% url 'signup' %}">Create new account</a></p>
 
         </div>
 </div>

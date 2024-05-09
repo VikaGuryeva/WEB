@@ -1,12 +1,12 @@
 {% load static %}
 
 <div class="border">
-        <img src="img.jpg" width="50" height="50" />
+        <img class="rounded-circle"  src="{{user.avatar}}" width="50" height="50" />
 </div>
 <div class="d-flex flex-column justify-content-between">
-        <div>Dr. Pepper</div>
+        <div>{{user.user.name}}</div>
         <div>
                 <a href="{% url 'settings' %}">Settings</a>
-                <a href="{% url 'signup' %}">Log out</a>
+                <a href="{% url 'logout' %}">Log out</a>
         </div>
 </div>

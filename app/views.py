@@ -1,14 +1,20 @@
+from audioop import reverse
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
+
+
 from app.models import Question, Answer, Profile, Tag, get_basecontext
 
 from django.http import Http404
 from django.http import HttpResponseRedirect, Http404, HttpResponseNotFound
 # Create your views here.
-
-from django.http import HttpResponse
+from django.urls import reverse
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect, reverse
+from .forms import LoginForm
 
 
 
@@ -98,9 +104,27 @@ def register(request, profile_id, tag_name):
     return render(request, "register.html", context)
 
 
+
+@require_http_methods(['GET', 'POST'])
 def login(request):
     context = get_basecontext()
+    if request.method == 'GET':
+        login_form = LoginForm()
+    if request.method == 'POST':
+        login_form = LoginForm(data=request.POST)
+        if login_form.is_valid():
+            user = authenticate(request, **login_form.cleaned_data)
+            if user:
+                    return redirect(reverse('index'))
+        print('Failed to login')
+    extra_context = {
+        "form": login_form
+    }
+    context.update(extra_context)
     return render(request, "login.html", context)
+
+def logout(request):
+    return HttpResponseRedirect(reverse("login"))
 
 
 def signup(request):
